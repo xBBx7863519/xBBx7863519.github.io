@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MO POP 澳門美食角色互動樂園 | 葡韻美食盲盒</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        /* ========== 全域變數 ========== */
+        :root {
+            --primary: #FFFCED;
+            --secondary: #FFE896;
+            --accent: #74AFD8;
+            --dark: #5D534A;
+            --light-brown: #8B7355;
+            --gray: #CCCCCC;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 232, 150, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(116, 175, 216, 0.15) 0%, transparent 20%);
+        }
+        
+        /* ========== 導覽列 ========== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background-color: rgba(255, 252, 237, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(93, 83, 74, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            height: 60px; /* 固定高度 */
+        }
+        
+        .logo img {
+            height: 100%;
+            max-width: 200px;
+            object-fit: contain;
+        }
+        
+        .logo-fallback {
+            display: none;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+        
+        .logo-fallback .logo-icon {
+            color: var(--accent);
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+        
+        .logo-fallback .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+        
+        .logo-fallback .logo-main {
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+        
+        .logo-fallback .logo-sub {
+            font-size: 0.8rem;
+            color: var(--light-brown);
+            letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background-color: var(--accent);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 70%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 5% 3rem;
+        }
+        
+        /* ========== 頁面標題 ========== */
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+            color: var(--dark);
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--light-brown);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        /* ========== 英雄區 ========== */
+        .hero-section {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary) 60%, var(--secondary) 100%);
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .hero-title span {
+            color: var(--accent);
+            position: relative;
+        }
+        
+        .hero-title span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: var(--secondary);
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--light-brown);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(116, 175, 216, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(116, 175, 216, 0.4);
+            background-color: #5a9bc8;
+        }
+        
+        .hero-visual {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            z-index: 1;
+        }
+        
+        /* ========== 葡式裝飾圖案 ========== */
+        .portuguese-pattern {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2374afd8' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .pattern-1 {
+            top: 10%;
+            left: 5%;
+        }
+        
+        .pattern-2 {
+            bottom: 10%;
+            right: 10%;
+            transform: rotate(45deg);
+        }
+        
+        /* ========== 美食特色卡片 ========== */
+        .food-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .food-feature {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid var(--secondary);
+            transition: all 0.3s;
+        }
+        
+        .food-feature:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(116, 175, 216, 0.2);
+        }
+        
+        .food-feature-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .food-feature-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .food-feature-desc {
+            color: var(--light-brown);
+            line-height: 1.5;
+        }
+        
+        /* ========== 角色互動區 ========== */
+        .interactive-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 10px 30px rgba(255, 232, 150, 0.1);
+        }
+        
+        .interactive-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .interactive-characters-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 252, 237, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(93, 83, 74, 0.1);
+        }
+        
+        .interactive-interaction-section {
+            flex: 2;
+            min-width: 500px;
+            background: rgba(255, 252, 237, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(93, 83, 74, 0.1);
+        }
+        
+        .interactive-section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .interactive-section-title i {
+            color: var(--accent);
+        }
+        
+        .interactive-characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        
+        .interactive-character-card {
+            background: rgba(255, 252, 237, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .interactive-character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(93, 83, 74, 0.15);
+            border-color: var(--accent);
+        }
+        
+        .interactive-character-card.active {
+            border-color: var(--accent);
+            background: rgba(116, 175, 216, 0.1);
+            box-shadow: 0 5px 15px rgba(116, 175, 216, 0.3);
+        }
+        
+        .interactive-character-card.locked {
+            background: rgba(204, 204, 204, 0.5);
+            cursor: not-allowed;
+            opacity: 0.6;
+            filter: grayscale(70%);
+        }
+        
+        .interactive-character-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--secondary);
+        }
+        
+        .interactive-character-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--dark);
+            border: 3px solid var(--accent);
+        }
+        
+        .interactive-character-card.locked .interactive-character-image {
+            background: var(--gray);
+            border-color: var(--gray);
+        }
+        
+        .interactive-character-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .interactive-character-card.locked .interactive-character-name {
+            color: var(--light-brown);
+        }
+        
+        .interactive-character-desc {
+            font-size: 0.9rem;
+            color: var(--light-brown);
+            margin-bottom: 10px;
+        }
+        
+        .interactive-character-rare {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .interactive-character-locked {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--gray);
+            color: var(--dark);
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .interactive-character-hunger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+            color: var(--dark);
+        }
+        
+        .interactive-dialogue-container {
+            background: rgba(255, 252, 237, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 180px;
+            border: 2px solid var(--secondary);
+        }
+        
+        .interactive-character-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .interactive-current-character-image {
+            width: 100%;
+            height: 100%;
+      
+            
+        }
+        
+        .interactive-current-character-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 確保圖片填滿容器，可能裁切，但不會變形 */
+            display: none;
+        }
+        
+        .interactive-current-character-image .fallback {
+            font-size: 3.5rem;
+            line-height: 120px;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .interactive-dialogue-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--dark);
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            border: 2px dashed var(--secondary);
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .interactive-dialogue-text::before {
+            content: "「";
+            font-size: 2rem;
+            color: var(--accent);
+            margin-right: 5px;
+        }
+        
+        .interactive-dialogue-text::after {
+            content: "」";
+            font-size: 2rem;
+            color: var(--accent);
+            margin-left: 5px;
+        }
+        
+        .interactive-action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .interactive-action-btn {
+            flex: 1;
+            min-width: 180px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-talk-btn {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .interactive-feed-btn {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .interactive-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(93, 83, 74, 0.1);
+        }
+        
+        .interactive-talk-btn:hover {
+            background: #5a9bc8;
+        }
+        
+        .interactive-feed-btn:hover {
+            background: #ffdc73;
+        }
+        
+        .interactive-action-btn:disabled {
+            background: var(--gray);
+            color: var(--light-brown);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .interactive-food-selection {
+            background: rgba(255, 252, 237, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid var(--secondary);
+        }
+        
+        .interactive-food-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .interactive-food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .interactive-food-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--secondary);
+            position: relative;
+        }
+        
+        .interactive-food-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(93, 83, 74, 0.1);
+            border-color: var(--accent);
+        }
+        
+        .interactive-food-item.favorite {
+            border-color: var(--accent);
+            background: rgba(116, 175, 216, 0.1);
+        }
+        
+        .interactive-food-item.favorite::after {
+            content: '最愛';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .interactive-food-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .interactive-food-name {
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .interactive-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--secondary);
+        }
+        
+        .interactive-stat-box {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 252, 237, 0.8);
+            border-radius: 15px;
+            min-width: 150px;
+            border: 2px solid var(--secondary);
+        }
+        
+        .interactive-stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .interactive-stat-label {
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        
+        /* ========== 虛擬開盒區 ========== */
+        .unboxing-section {
+            text-align: center;
+            padding: 3rem 0;
+            background-color: rgba(255, 232, 150, 0.1);
+            border-radius: 30px;
+            margin-top: 3rem;
+        }
+        
+        .unboxing-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .blind-box {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, var(--accent), #5a9bc8);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(116, 175, 216, 0.3);
+            transition: all 0.5s;
+            overflow: hidden;
+        }
+        
+        .blind-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(116, 175, 216, 0.4);
+        }
+        
+        .blind-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+        
+        .blind-box:hover::before {
+            left: 100%;
+        }
+        
+        .box-icon {
+            font-size: 5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .box-text {
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .box-shake {
+            animation: shake 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(-5px) rotate(-2deg); }
+            100% { transform: translateX(5px) rotate(2deg); }
+        }
+        
+        .unbox-result {
+            display: none;
+            background-color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 2rem;
+            border: 3px solid var(--secondary);
+            box-shadow: 0 10px 30px rgba(255, 232, 150, 0.3);
+        }
+        
+        .result-character {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .result-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%; /* 開盒結果的圖片保留圓形，符合收藏牆風格 */
+            object-fit: cover;
+            border: 5px solid var(--accent);
+        }
+        
+        .result-info {
+            text-align: left;
+            max-width: 350px;
+        }
+        
+        .result-name {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-rarity {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .result-rarity.rare {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .result-desc {
+            color: var(--light-brown);
+            line-height: 1.6;
+        }
+        
+        .collection-section {
+            margin-top: 3rem;
+            width: 100%;
+        }
+        
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .collection-item {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .collection-item.owned {
+            border-color: var(--accent);
+            box-shadow: 0 5px 15px rgba(116, 175, 216, 0.2);
+        }
+        
+        .collection-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* 收藏牆圖片也保持圓形 */
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+            border: 3px solid var(--secondary);
+        }
+        
+        /* ========== 記憶遊戲 ========== */
+        .game-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 2rem;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 10px 30px rgba(255, 232, 150, 0.1);
+        }
+        
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background-color: var(--accent);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            position: relative;
+        }
+        
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .memory-card.matched {
+            cursor: default;
+            opacity: 0.7;
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .card-front {
+            background-color: var(--secondary);
+            color: var(--dark);
+            transform: rotateY(180deg);
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, var(--accent), #5a9bc8);
+            color: white;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .card-name {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        /* ========== 產品卡片 ========== */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .character-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+            border: 2px solid var(--secondary);
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(255, 232, 150, 0.2);
+        }
+        
+        .character-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(116, 175, 216, 0.3);
+        }
+        
+        .character-card.rare {
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(116, 175, 216, 0.3);
+        }
+        
+        .character-card.rare:hover {
+            box-shadow: 0 20px 40px rgba(116, 175, 216, 0.4);
+        }
+        
+        .character-img-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            background-color: var(--primary);
+        }
+        
+        .character-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .character-card:hover .character-img {
+            transform: scale(1.05);
+        }
+        
+        .character-info {
+            padding: 1.5rem;
+        }
+        
+        .character-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .character-type {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .character-desc {
+            color: var(--light-brown);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* ========== 頁尾 ========== */
+        .footer {
+            background-color: var(--dark);
+            color: var(--primary);
+            padding: 3rem 5% 2rem;
+            margin-top: 5rem;
+            border-radius: 30px 30px 0 0;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+            opacity: 0.8;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            opacity: 1;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 232, 150, 0.2);
+            color: var(--primary);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--secondary);
+            color: var(--dark);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 252, 237, 0.1);
+            color: rgba(255, 252, 237, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* ========== 響應式 ========== */
+        @media (max-width: 992px) {
+            .hero-visual { display: none; }
+            .hero-content { max-width: 100%; text-align: center; }
+            .hero-title { font-size: 2.8rem; }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 5%; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background-color: var(--primary); flex-direction: column; padding: 1rem 0; border-top: 2px solid var(--secondary); }
+            .nav-links.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .hero-title { font-size: 2.2rem; }
+            .page-title { font-size: 2rem; }
+            .memory-game { grid-template-columns: repeat(3, 1fr); }
+            .unboxing-section { padding: 2rem 1rem; }
+            .interactive-content { flex-direction: column; }
+            .interactive-characters-section, .interactive-interaction-section { min-width: 100%; }
+            .interactive-characters-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .interactive-character-display { flex-direction: column; text-align: center; }
+            .interactive-action-buttons { flex-direction: column; }
+            .interactive-stats { flex-direction: column; gap: 15px; }
+        }
+        
+        @media (max-width: 480px) {
+            .container { padding: 5rem 5% 2rem; }
+            .hero-title { font-size: 1.8rem; }
+            .blind-box { width: 250px; height: 250px; }
+            .memory-game { grid-template-columns: repeat(2, 1fr); }
+            .result-character { flex-direction: column; text-align: center; }
+            .result-info { text-align: center; }
+            .interactive-food-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 葡式裝飾圖案 -->
+    <div class="portuguese-pattern pattern-1"></div>
+    <div class="portuguese-pattern pattern-2"></div>
+    
+    <!-- 導覽列 -->
+    <nav class="navbar">
+        <div class="logo" id="logoContainer">
+            <!-- Logo 圖片將由 JavaScript 動態插入 -->
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="#home" class="active"><i class="fas fa-home"></i> 首頁</a>
+            <a href="#interactive"><i class="fas fa-comments"></i> 角色互動</a>
+            <a href="#unboxing"><i class="fas fa-gift"></i> 虛擬開盒</a>
+            <a href="#games"><i class="fas fa-gamepad"></i> 記憶遊戲</a>
+            <a href="#features"><i class="fas fa-utensil-spoon"></i> 葡式美食</a>
+            <a href="#products"><i class="fas fa-shopping-cart"></i> 購買盲盒</a>
+        </div>
+    </nav>
+
+    <!-- 首頁英雄區 -->
+    <section id="home" class="container hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">澳門美食<span>角色互動</span><br>葡韻美食盲盒</h1>
+            <p class="hero-subtitle">
+                歡迎來到MO POP澳門美食角色互動樂園！通過虛擬開盒解鎖可愛的澳門葡式美食角色，
+                與他們互動、餵食葡式美食，聆聽他們的故事！每款角色都有獨特的故事與魅力，
+                快來收集所有角色，特別是稀有的馬介休球小子！
+            </p>
+            <a href="#unboxing" class="cta-button">立即開盒 <i class="fas fa-gift"></i></a>
+            <a href="#interactive" class="cta-button" style="margin-left: 15px; background-color: var(--secondary); color: var(--dark);">角色互動 <i class="fas fa-comments"></i></a>
+        </div>
+        
+        <div class="hero-visual" id="heroVisual"></div>
+    </section>
+
+    <!-- 角色互動樂園 -->
+    <section id="interactive" class="container">
+        <h2 class="page-title">角色互動樂園</h2>
+        <p class="section-subtitle">通過虛擬開盒解鎖角色，與五位可愛的澳門美食角色互動，餵食他們喜歡的葡式美食，聆聽他們的故事！</p>
+        
+        <div class="interactive-section">
+            <div class="interactive-content">
+                <section class="interactive-characters-section">
+                    <h2 class="interactive-section-title"><i class="fas fa-users"></i> 角色列表</h2>
+                    <div class="interactive-characters-grid" id="interactiveCharactersGrid"></div>
+                </section>
+                
+                <section class="interactive-interaction-section">
+                    <h2 class="interactive-section-title"><i class="fas fa-comments"></i> 角色互動</h2>
+                    
+                    <div class="interactive-character-display">
+                        <div class="interactive-current-character-image" id="interactiveCurrentCharacterImage">
+                            <img src="" alt="" id="currentCharacterImg" style="width:100%; height:100%; object-fit:cover; display:none;">
+                            <div class="fallback" id="currentCharacterFallback"><i class="fas fa-question"></i></div>
+                        </div>
+                        <div class="interactive-dialogue-container">
+                            <div class="interactive-dialogue-text" id="interactiveDialogueText">
+                                請先從虛擬開盒中解鎖角色！
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="interactive-action-buttons">
+                        <button class="interactive-action-btn interactive-talk-btn" id="interactiveTalkBtn" disabled>
+                            <i class="fas fa-comment-dots"></i> 與角色對話
+                        </button>
+                        <button class="interactive-action-btn interactive-feed-btn" id="interactiveFeedBtn" disabled>
+                            <i class="fas fa-utensil-spoon"></i> 餵食葡式美食
+                        </button>
+                    </div>
+                    
+                    <div class="interactive-food-selection" id="interactiveFoodSelection" style="display: none;">
+                        <h3 class="interactive-food-title"><i class="fas fa-utensils"></i> 選擇要餵食的葡式美食</h3>
+                        <div class="interactive-food-grid" id="interactiveFoodGrid"></div>
+                    </div>
+                    
+                    <div class="interactive-stats">
+                        <div class="interactive-stat-box">
+                            <div class="interactive-stat-value" id="interactiveTotalInteractions">0</div>
+                            <div class="interactive-stat-label">總互動次數</div>
+                        </div>
+                        <div class="interactive-stat-box">
+                            <div class="interactive-stat-value" id="interactiveTotalFeeds">0</div>
+                            <div class="interactive-stat-label">總餵食次數</div>
+                        </div>
+                        <div class="interactive-stat-box">
+                            <div class="interactive-stat-value" id="interactiveUnlockedCount">0/5</div>
+                            <div class="interactive-stat-label">已解鎖角色</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <!-- 葡式美食特色 -->
+    <section id="features" class="container">
+        <h2 class="page-title">葡式美食文化</h2>
+        <p class="section-subtitle">認識MO POP角色背後的葡式美食故事</p>
+        
+        <div class="food-features">
+            <div class="food-feature">
+                <i class="fas fa-drumstick-bite food-feature-icon"></i>
+                <h3 class="food-feature-title">葡國雞</h3>
+                <p class="food-feature-desc">葡萄牙經典菜餚，融合葡國與澳門飲食文化，以椰奶、黃薑粉和橄欖油烹製，風味獨特。</p>
+            </div>
+            <div class="food-feature">
+                <i class="fas fa-ice-cream food-feature-icon"></i>
+                <h3 class="food-feature-title">木糠布甸</h3>
+                <p class="food-feature-desc">葡萄牙著名甜品，由餅乾碎和奶油層層疊起，冷凍後食用，口感豐富細膩。</p>
+            </div>
+            <div class="food-feature">
+                <i class="fas fa-carrot food-feature-icon"></i>
+                <h3 class="food-feature-title">免治土豆</h3>
+                <p class="food-feature-desc">澳門茶餐廳常見美食，將碎肉與土豆粒炒製，滋味濃郁。</p>
+            </div>
+            <div class="food-feature">
+                <i class="fas fa-pepper-hot food-feature-icon"></i>
+                <h3 class="food-feature-title">非洲雞</h3>
+                <p class="food-feature-desc">澳門特色菜，融合葡國、非洲及東南亞風味，以多種香料和椰奶烤製，香辣惹味。</p>
+            </div>
+            <div class="food-feature">
+                <i class="fas fa-fish food-feature-icon"></i>
+                <h3 class="food-feature-title">馬介休</h3>
+                <p class="food-feature-desc">葡萄牙國寶食材，即醃製鱈魚，可變化出多種菜式，是葡國飲食文化的重要代表。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 虛擬開盒 -->
+    <section id="unboxing" class="container unboxing-section">
+        <h2 class="page-title">虛擬開盒體驗</h2>
+        <p class="section-subtitle">點擊盲盒，解鎖角色！</p>
+        
+        <div class="unboxing-container">
+            <div class="blind-box" id="blindBox">
+                <div class="box-icon"><i class="fas fa-utensils"></i></div>
+                <div class="box-text">點擊開盒</div>
+            </div>
+            
+            <div class="unbox-result" id="unboxResult">
+                <div class="result-character">
+                    <img src="" alt="角色圖片" class="result-img" id="resultImg">
+                    <div class="result-info">
+                        <h3 class="result-name" id="resultName"></h3>
+                        <div class="result-rarity" id="resultRarity"></div>
+                        <p class="result-desc" id="resultDesc"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collection-section">
+                <h3>收藏牆 <span id="collectionCount">0</span>/5</h3>
+                <div class="collection-grid" id="collectionGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 記憶遊戲 -->
+    <section id="games" class="container">
+        <h2 class="page-title">葡食記憶挑戰</h2>
+        <p class="section-subtitle">挑戰你的記憶力！翻開卡片配對相同的葡式美食角色，全部配對成功即可獲得限定壁紙</p>
+        <div class="game-section">
+            <div class="memory-game" id="memoryGame"></div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="cta-button" id="restartGame">重新開始</button>
+                <p style="margin-top: 1rem;">配對成功: <span id="matchCount">0</span>/5</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 產品購買（簡化） -->
+    <section id="products" class="container">
+        <h2 class="page-title">實體盲盒收藏</h2>
+        <p class="section-subtitle">將您喜愛的葡式美食角色帶回現實！</p>
+        <div class="characters-grid">
+            <div class="character-card">
+                <div class="character-img-container">
+                    <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=500" alt="初代系列" class="character-img">
+                </div>
+                <div class="character-info">
+                    <h3 class="character-name">葡韻美食系列</h3>
+                    <span class="character-type">5款角色 + 1隱藏</span>
+                    <p class="character-desc">首發經典系列，每盒隨機一款，附贈角色收藏卡及美食小知識。</p>
+                    <a href="#" class="cta-button" style="padding: 0.7rem 1.5rem; margin-top: 1rem; display: inline-block;">立即購買</a>
+                </div>
+            </div>
+            <div class="character-card">
+                <div class="character-img-container">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500" alt="節日系列" class="character-img">
+                </div>
+                <div class="character-info">
+                    <h3 class="character-name">葡式節日系列</h3>
+                    <span class="character-type">節日限定款式</span>
+                    <p class="character-desc">節日特別版，角色穿著傳統葡式節日服飾。</p>
+                    <a href="#" class="cta-button" style="padding: 0.7rem 1.5rem; margin-top: 1rem; display: inline-block;">即將推出</a>
+                </div>
+            </div>
+            <div class="character-card">
+                <div class="character-img-container">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" alt="迷你系列" class="character-img">
+                </div>
+                <div class="character-info">
+                    <h3 class="character-name">迷你美食系列</h3>
+                    <span class="character-type">Q版造型</span>
+                    <p class="character-desc">Q版迷你造型，全套收集可拼成葡式餐桌場景。</p>
+                    <a href="#" class="cta-button" style="padding: 0.7rem 1.5rem; margin-top: 1rem; display: inline-block;">即將推出</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>MO POP 葡韻美食互動樂園</h3>
+                <p>將葡式美食文化融入可愛角色互動與盲盒收藏。</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>快速連結</h3>
+                <ul class="footer-links">
+                    <li><a href="#home">首頁</a></li>
+                    <li><a href="#interactive">角色互動</a></li>
+                    <li><a href="#unboxing">虛擬開盒</a></li>
+                    <li><a href="#games">記憶遊戲</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>訂閱電子報</h3>
+                <p>獲取最新角色互動更新與葡式美食資訊</p>
+                <div style="display: flex;">
+                    <input type="email" placeholder="輸入您的電子郵件" style="flex:1; padding:0.8rem; border:none; border-radius:5px 0 0 5px; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,252,237,0.3);">
+                    <button style="background:var(--accent); color:white; border:none; padding:0 1.5rem; border-radius:0 5px 5px 0; cursor:pointer;">訂閱</button>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">© 2023 MO POP 葡韻美食互動樂園. 保留所有權利。</div>
+    </footer>
+
+    <script>
+        (function() {
+            // ==================== 使用者可自訂的圖片路徑 ====================
+            // 請將此路徑修改為您本機存放圖片的資料夾路徑
+            // 範例： "images/"（相對路徑，表示與 HTML 同層的 images 資料夾）
+            // 範例： "file:///C:/Users/BB/Desktop/畢業設計/"（絕對路徑，需注意瀏覽器安全限制）
+            const imageBasePath = "images/"; // ← 請在這裡設定您的圖片路徑（留空則使用預設 Unsplash 圖片）
+            
+            // Logo 圖片檔名（請根據實際檔案名稱修改）
+            const logoImageName = "logo.png"; // 假設您的 logo 圖片名稱為 logo.png
+
+            // ==================== 角色資料（開盒用）====================
+            const unboxChars = [
+                { 
+                    id: 1, 
+                    name: "葡國雞小姐", 
+                    rarity: "普通", 
+                    desc: "穿著華麗葡萄牙傳統服飾的優雅小姐，頭戴雞冠造型頭飾。性格溫和親切，擅長烹飪各種葡式美食，夢想是將葡國雞的美味傳遍世界。",
+                    img: imageBasePath ? imageBasePath + encodeURIComponent("葡國雞小姐") + ".png" : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500",
+                    icon: "fas fa-drumstick-bite"
+                },
+                { 
+                    id: 2, 
+                    name: "木糠布甸少女", 
+                    rarity: "普通", 
+                    desc: "身穿淡粉色蓬蓬裙的可愛少女，髮飾是餅乾碎造型。個性甜美溫柔，喜歡製作各種甜品，特別是經典的木糠布甸。總是隨身帶著小勺子，隨時準備品嚐美味。",
+                    img: imageBasePath ? imageBasePath + encodeURIComponent("木糠布甸少女") + ".png" : "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=500",
+                    icon: "fas fa-ice-cream"
+                },
+                { 
+                    id: 3, 
+                    name: "免治土豆崽", 
+                    rarity: "普通", 
+                    desc: "活潑好動的小男孩，穿著廚師圍裙，頭頂土豆造型帽子。喜歡在廚房裡幫忙，特別擅長切土豆。夢想是成為最厲害的廚師，創造出更多美味的免治土豆菜式。",
+                    img: imageBasePath ? imageBasePath + encodeURIComponent("免治土豆崽") + ".png" : "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+                    icon: "fas fa-carrot"
+                },
+                { 
+                    id: 4, 
+                    name: "非洲雞叔叔", 
+                    rarity: "普通", 
+                    desc: "充滿活力的中年大叔，穿著非洲風味圍裙，頭戴辣椒造型帽。精通各種香料搭配，特別擅長製作香辣惹味的非洲雞。性格熱情豪爽，喜歡與人分享美食。",
+                    img: imageBasePath ? imageBasePath + encodeURIComponent("非洲雞叔叔") + ".png" : "https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?w=500",
+                    icon: "fas fa-pepper-hot"
+                },
+                { 
+                    id: 5, 
+                    name: "馬介休球小子", 
+                    rarity: "稀有", 
+                    desc: "葡萄牙飲食文化的代表，穿著水手服的可愛男孩，頭頂鱈魚造型帽子。是系列中的稀有角色，擁有操控海水的能力。性格沉穩睿智，對葡式美食的歷史瞭如指掌。",
+                    img: imageBasePath ? imageBasePath + encodeURIComponent("馬介休小子") + ".png" : "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500",
+                    icon: "fas fa-fish"
+                }
+            ];
+
+            // ==================== 互動角色資料（對話用）====================
+            const interactiveCharacters = [
+                {
+                    id: 1,
+                    name: "葡國雞小姐",
+                    desc: "葡國雞是熱情如火的葡萄牙風格雞肉料理",
+                    emoji: "🍗",
+                    color: "#FF9966",
+                    dialogue: [
+                        "Olá! 我是葡國雞小姐，葡國雞是融合了葡萄牙與澳門風味的代表料理！",
+                        "我喜歡溫暖的氣息，就像葡國雞需要慢火燉煮一樣。",
+                        "你知道嗎？正宗葡國雞必須使用葡萄牙的橄欖油和葡萄酒！",
+                        "跟我聊天讓我想起了家鄉的味道，溫暖而豐富。",
+                        "謝謝你和我聊天，讓我感受到澳門的多元文化魅力！"
+                    ],
+                    favoriteFood: "葡國雞",
+                    hunger: 0,
+                    unlocked: false,
+                    rare: false
+                },
+                {
+                    id: 2,
+                    name: "木糠布甸少女",
+                    desc: "木糠布甸是甜蜜細膩的澳門經典甜品",
+                    emoji: "🍮",
+                    color: "#FFCCCC",
+                    dialogue: [
+                        "你好呀！我是木糠布甸少女，木糠布甸是澳門最受歡迎的甜品之一！",
+                        "木糠布甸的口感層次豐富，就像澳門的歷史文化一樣有深度。",
+                        "製作木糠布甸需要耐心，一層餅乾屑一層奶油慢慢堆疊。",
+                        "我最喜歡涼爽的環境了，就像木糠布甸要冷冷的才能保持最佳口感。",
+                        "和你聊天真開心，就像品嚐一口冰涼的木糠布甸一樣甜蜜！"
+                    ],
+                    favoriteFood: "木糠布甸",
+                    hunger: 0,
+                    unlocked: false,
+                    rare: false
+                },
+                {
+                    id: 3,
+                    name: "免治土豆崽",
+                    desc: "免治土豆是澳門茶餐廳的經典 comfort food",
+                    emoji: "🥔",
+                    color: "#FFCC66",
+                    dialogue: [
+                        "嗨！我是免治土豆崽，免治土豆是澳門茶餐廳的人氣美食！",
+                        "免治土豆雖然看起來簡單，但可是充滿了澳門的飲食智慧哦！",
+                        "免治意思是「切碎」，是由碎肉和土豆製成的。",
+                        "土豆總能帶給人們溫暖的飽足感，就像家的味道。",
+                        "謝謝你和我聊天，讓我感受到被重視的快樂！"
+                    ],
+                    favoriteFood: "免治土豆",
+                    hunger: 0,
+                    unlocked: false,
+                    rare: false
+                },
+                {
+                    id: 4,
+                    name: "非洲雞叔叔",
+                    desc: "非洲雞是香辣濃郁的澳門特色菜",
+                    emoji: "🍗",
+                    color: "#CC6600",
+                    dialogue: [
+                        "嘿！我是非洲雞叔叔，非洲雞是澳門的辛辣代表！",
+                        "別被非洲雞的名字誤導，它其實是澳門獨創的料理哦！",
+                        "非洲雞的醬汁使用了十多種香料，風味層次非常豐富。",
+                        "雖然非洲雞有點辣，但我保證會讓你回味無窮！",
+                        "和你聊天就像品嚐非洲雞一樣，充滿驚喜和滿足！"
+                    ],
+                    favoriteFood: "非洲雞",
+                    hunger: 0,
+                    unlocked: false,
+                    rare: false
+                },
+                {
+                    id: 5,
+                    name: "馬介休球小子",
+                    desc: "馬介休是澳門葡式鹹魚料理的代表",
+                    emoji: "🐟",
+                    color: "#74AFD8",
+                    dialogue: [
+                        "Olá! 我是馬介休球小子，馬介休是澳門葡國菜的靈魂食材！",
+                        "馬介休是由鱈魚經鹽醃製而成，是葡萄牙航海時代的產物。",
+                        "在澳門，馬介休可以變成馬介休球、馬介休炒飯等各種料理。",
+                        "馬介休的味道獨特而濃郁，是澳門飲食文化的重要部分。",
+                        "很高興你發現了我！作為稀有角色，我很少出現呢！"
+                    ],
+                    favoriteFood: "馬介休球",
+                    hunger: 0,
+                    unlocked: false,
+                    rare: true
+                }
+            ];
+
+            // 食物資料
+            const foods = [
+                { name: "葡國雞", emoji: "🍗" },
+                { name: "木糠布甸", emoji: "🍮" },
+                { name: "免治土豆", emoji: "🥔" },
+                { name: "非洲雞", emoji: "🌶️🍗" },
+                { name: "馬介休球", emoji: "🐟⚽" },
+                { name: "葡式蛋撻", emoji: "🥧" },
+                { name: "葡萄牙海鮮飯", emoji: "🍚🦐" },
+                { name: "葡式烤乳豬", emoji: "🐷🔥" },
+                { name: "葡式綠菜湯", emoji: "🥣🥬" },
+                { name: "葡式沙甸魚", emoji: "🐟🍅" }
+            ];
+
+            // ==================== 全域變數 ====================
+            let currentChar = null;
+            let totalInteractions = 0, totalFeeds = 0;
+            // 從 localStorage 讀取收藏
+            let userCollection = JSON.parse(localStorage.getItem('moPopCollection')) || [];
+
+            // 更新互動角色的解鎖狀態
+            interactiveCharacters.forEach(c => c.unlocked = userCollection.includes(c.id));
+
+            // 載入儲存的飽足度
+            const savedData = localStorage.getItem('macauInteractiveData');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    data.characters.forEach(s => {
+                        const found = interactiveCharacters.find(c => c.id === s.id);
+                        if (found) found.hunger = s.hunger || 0;
+                    });
+                    totalInteractions = data.totalInteractions || 0;
+                    totalFeeds = data.totalFeeds || 0;
+                } catch (e) {}
+            }
+
+            // ==================== DOM 元素 ====================
+            const logoContainer = document.getElementById('logoContainer');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            const charsGrid = document.getElementById('interactiveCharactersGrid');
+            const curImg = document.getElementById('currentCharacterImg');
+            const curFallback = document.getElementById('currentCharacterFallback');
+            const dialTxt = document.getElementById('interactiveDialogueText');
+            const talkBtn = document.getElementById('interactiveTalkBtn');
+            const feedBtn = document.getElementById('interactiveFeedBtn');
+            const foodSel = document.getElementById('interactiveFoodSelection');
+            const foodGrid = document.getElementById('interactiveFoodGrid');
+            const totalIntEl = document.getElementById('interactiveTotalInteractions');
+            const totalFeedEl = document.getElementById('interactiveTotalFeeds');
+            const unlockedCountEl = document.getElementById('interactiveUnlockedCount');
+            const blindBox = document.getElementById('blindBox');
+            const unboxResult = document.getElementById('unboxResult');
+            const resultImg = document.getElementById('resultImg');
+            const resultName = document.getElementById('resultName');
+            const resultRarity = document.getElementById('resultRarity');
+            const resultDesc = document.getElementById('resultDesc');
+            const collectionGrid = document.getElementById('collectionGrid');
+            const collectionCount = document.getElementById('collectionCount');
+            const memoryGame = document.getElementById('memoryGame');
+            const restartBtn = document.getElementById('restartGame');
+            const matchSpan = document.getElementById('matchCount');
+
+            // ==================== 初始化 Logo ====================
+            function initLogo() {
+                if (imageBasePath) {
+                    const logoImg = document.createElement('img');
+                    logoImg.src = imageBasePath + encodeURIComponent(logoImageName);
+                    logoImg.alt = "MO POP Logo";
+                    logoImg.onload = () => {
+                        logoContainer.innerHTML = '';
+                        logoContainer.appendChild(logoImg);
+                    };
+                    logoImg.onerror = () => {
+                        // 圖片載入失敗，顯示文字標誌
+                        logoContainer.innerHTML = `
+                            <div class="logo-fallback" style="display: flex;">
+                                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                                <div class="logo-text">
+                                    <span class="logo-main">MO POP</span>
+                                    <span class="logo-sub">葡韻美食互動樂園</span>
+                                </div>
+                            </div>
+                        `;
+                    };
+                } else {
+                    // 無路徑，直接顯示文字標誌
+                    logoContainer.innerHTML = `
+                        <div class="logo-fallback" style="display: flex;">
+                            <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                            <div class="logo-text">
+                                <span class="logo-main">MO POP</span>
+                                <span class="logo-sub">葡韻美食互動樂園</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            initLogo();
+
+            // ==================== 輔助函數 ====================
+            function saveData() {
+                const data = {
+                    characters: interactiveCharacters.map(c => ({ id: c.id, hunger: c.hunger })),
+                    totalInteractions,
+                    totalFeeds
+                };
+                localStorage.setItem('macauInteractiveData', JSON.stringify(data));
+            }
+
+            function updateStats() {
+                totalIntEl.textContent = totalInteractions;
+                totalFeedEl.textContent = totalFeeds;
+                unlockedCountEl.textContent = interactiveCharacters.filter(c => c.unlocked).length + '/5';
+            }
+
+            // ==================== 互動樂園角色卡片渲染 ====================
+            function renderChars() {
+                charsGrid.innerHTML = '';
+                interactiveCharacters.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = `interactive-character-card ${currentChar?.id === c.id ? 'active' : ''} ${!c.unlocked ? 'locked' : ''}`;
+                    card.innerHTML = `
+                        ${c.rare ? '<div class="interactive-character-rare">稀有</div>' : ''}
+                        ${!c.unlocked ? '<div class="interactive-character-locked"><i class="fas fa-lock"></i> 未解鎖</div>' : ''}
+                        <div class="interactive-character-image" style="background:${c.color};">${c.emoji}</div>
+                        <div class="interactive-character-name">${c.name}</div>
+                        <div class="interactive-character-desc">${c.desc}</div>
+                        ${c.unlocked ? `<div class="interactive-character-hunger"><i class="fas fa-heart" style="color:#ff6666;"></i> 飽足度: ${c.hunger}/10</div>` : ''}
+                    `;
+                    if (c.unlocked) {
+                        card.addEventListener('click', () => selectChar(c));
+                    } else {
+                        card.addEventListener('click', () => {
+                            dialTxt.textContent = `請先解鎖 ${c.name}！`;
+                            document.getElementById('unboxing').scrollIntoView({ behavior: 'smooth' });
+                        });
+                    }
+                    charsGrid.appendChild(card);
+                });
+            }
+
+            function selectChar(c) {
+                if (!c.unlocked) return;
+                currentChar = c;
+                // 更新中央圖片
+                const unboxChar = unboxChars.find(uc => uc.id === c.id);
+                if (unboxChar) {
+                    curImg.onload = () => {
+                        curImg.style.display = 'block';
+                        curFallback.style.display = 'none';
+                    };
+                    curImg.onerror = () => {
+                        curImg.style.display = 'none';
+                        curFallback.style.display = 'flex';
+                        curFallback.innerHTML = c.emoji; // 顯示 emoji 作為 fallback
+                    };
+                    curImg.src = unboxChar.img;
+                } else {
+                    curImg.style.display = 'none';
+                    curFallback.style.display = 'flex';
+                    curFallback.innerHTML = c.emoji;
+                }
+
+                dialTxt.textContent = `你好！我是${c.name}，${c.desc}`;
+                talkBtn.disabled = false;
+                feedBtn.disabled = false;
+                foodSel.style.display = 'none';
+                renderChars();
+                renderFoods();
+            }
+
+            function renderFoods() {
+                foodGrid.innerHTML = '';
+                foods.forEach(f => {
+                    const item = document.createElement('div');
+                    item.className = `interactive-food-item ${currentChar?.favoriteFood === f.name ? 'favorite' : ''}`;
+                    item.innerHTML = `<div class="interactive-food-icon">${f.emoji}</div><div class="interactive-food-name">${f.name}</div>`;
+                    item.addEventListener('click', () => feedChar(f));
+                    foodGrid.appendChild(item);
+                });
+            }
+
+            function feedChar(f) {
+                if (!currentChar) return;
+                foodSel.style.display = 'none';
+                const isFav = f.name === currentChar.favoriteFood;
+                const inc = isFav ? 4 : 2;
+                currentChar.hunger = Math.min(10, currentChar.hunger + inc);
+                dialTxt.textContent = isFav ? `太棒了！${currentChar.name}最喜歡${f.name}！飽足度大幅增加！` : `${currentChar.name}吃了${f.name}，這道葡式美食真不錯！`;
+                if (isFav) createHeartEffect();
+                totalFeeds++;
+                updateStats();
+                renderChars();
+                saveData();
+            }
+
+            function createHeartEffect() {
+                for (let i = 0; i < 8; i++) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '<i class="fas fa-heart" style="color:#ff6666;"></i>';
+                    heart.style.position = 'absolute';
+                    heart.style.fontSize = '1.5rem';
+                    heart.style.zIndex = '100';
+                    heart.style.left = '50%';
+                    heart.style.top = '50%';
+                    document.querySelector('.interactive-current-character-image').appendChild(heart);
+                    gsap.to(heart, {
+                        x: (Math.random() - 0.5) * 100,
+                        y: -Math.random() * 100 - 50,
+                        opacity: 0,
+                        duration: 1.5,
+                        onComplete: () => heart.remove()
+                    });
+                }
+            }
+
+            talkBtn.addEventListener('click', () => {
+                if (!currentChar) return;
+                const idx = Math.floor(Math.random() * currentChar.dialogue.length);
+                dialTxt.textContent = currentChar.dialogue[idx];
+                totalInteractions++;
+                updateStats();
+                saveData();
+            });
+
+            feedBtn.addEventListener('click', () => {
+                if (!currentChar) return;
+                renderFoods();
+                foodSel.style.display = 'block';
+            });
+
+            // ==================== 收藏牆顯示 ====================
+            function updateCollectionDisplay() {
+                collectionGrid.innerHTML = '';
+                collectionCount.textContent = userCollection.length;
+                unboxChars.forEach(c => {
+                    const owned = userCollection.includes(c.id);
+                    const item = document.createElement('div');
+                    item.className = `collection-item ${owned ? 'owned' : ''}`;
+                    item.innerHTML = `
+                        <img src="${c.img}" alt="${c.name}" class="collection-img" onerror="this.src='https://via.placeholder.com/100?text=${encodeURIComponent(c.name)}'">
+                        <p>${c.name}</p>
+                        <small>${owned ? '✓ 已收集' : '未獲得'}</small>
+                    `;
+                    collectionGrid.appendChild(item);
+                });
+            }
+            updateCollectionDisplay();
+
+            // ==================== 開盒功能 ====================
+            blindBox.addEventListener('click', function() {
+                blindBox.classList.add('box-shake');
+                blindBox.querySelector('.box-text').textContent = '搖晃中...';
+                setTimeout(() => {
+                    blindBox.classList.remove('box-shake');
+                    blindBox.querySelector('.box-text').textContent = '開啟中...';
+                    gsap.to(blindBox, {
+                        scale: 1.2,
+                        duration: 0.5,
+                        yoyo: true,
+                        repeat: 1,
+                        onComplete: () => {
+                            const isRare = Math.random() < 0.15;
+                            let idx;
+                            if (isRare) {
+                                idx = unboxChars.findIndex(c => c.rarity === '稀有');
+                            } else {
+                                const normals = unboxChars.filter(c => c.rarity !== '稀有');
+                                idx = unboxChars.indexOf(normals[Math.floor(Math.random() * normals.length)]);
+                            }
+                            const selected = unboxChars[idx];
+                            resultImg.src = selected.img;
+                            resultImg.onerror = () => { resultImg.src = 'https://via.placeholder.com/150?text=圖片遺失'; };
+                            resultName.textContent = selected.name;
+                            resultRarity.textContent = selected.rarity;
+                            resultRarity.className = `result-rarity ${selected.rarity === '稀有' ? 'rare' : ''}`;
+                            resultDesc.textContent = selected.desc;
+                            unboxResult.style.display = 'block';
+                            blindBox.querySelector('.box-text').textContent = '再次開盒';
+
+                            if (!userCollection.includes(selected.id)) {
+                                userCollection.push(selected.id);
+                                localStorage.setItem('moPopCollection', JSON.stringify(userCollection));
+                                updateCollectionDisplay();
+                                // 更新互動樂園解鎖狀態
+                                const char = interactiveCharacters.find(c => c.id === selected.id);
+                                if (char) char.unlocked = true;
+                                renderChars();
+                                updateStats();
+                                if (!currentChar || !currentChar.unlocked) {
+                                    const first = interactiveCharacters.find(c => c.unlocked);
+                                    if (first) selectChar(first);
+                                }
+                                // 顯示新解鎖訊息
+                                const msg = document.createElement('div');
+                                msg.style.cssText = 'position:fixed; top:100px; right:20px; background:var(--accent); color:white; padding:1rem; border-radius:10px; z-index:10000;';
+                                msg.innerHTML = `<i class="fas fa-unlock"></i> 解鎖 ${selected.name}！`;
+                                document.body.appendChild(msg);
+                                setTimeout(() => msg.remove(), 3000);
+                            } else {
+                                const msg = document.createElement('div');
+                                msg.style.cssText = 'position:fixed; top:100px; right:20px; background:var(--light-brown); color:white; padding:1rem; border-radius:10px; z-index:10000;';
+                                msg.innerHTML = `您已經擁有 ${selected.name} 了！`;
+                                document.body.appendChild(msg);
+                                setTimeout(() => msg.remove(), 2000);
+                            }
+                            unboxResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
+                }, 1500);
+            });
+
+            // ==================== 記憶遊戲 ====================
+            let cards = [], flipped = [], matched = 0, canFlip = true;
+
+            function shuffleArray(a) {
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function initMemoryGame() {
+                memoryGame.innerHTML = '';
+                flipped = [];
+                matched = 0;
+                canFlip = true;
+                matchSpan.textContent = matched;
+                const base = unboxChars.map(c => ({ id: c.id, icon: c.icon, name: c.name }));
+                cards = shuffleArray([...base, ...base]);
+                cards.forEach((c, i) => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.dataset.id = c.id;
+                    card.dataset.index = i;
+                    card.innerHTML = `
+                        <div class="card-front">
+                            <div class="card-icon"><i class="${c.icon}"></i></div>
+                            <div class="card-name">${c.name}</div>
+                        </div>
+                        <div class="card-back"><i class="fas fa-utensils"></i></div>
+                    `;
+                    card.addEventListener('click', () => flipCard(card));
+                    memoryGame.appendChild(card);
+                });
+            }
+
+            function flipCard(card) {
+                if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length >= 2) return;
+                card.classList.add('flipped');
+                flipped.push(card);
+                if (flipped.length === 2) {
+                    canFlip = false;
+                    const [a, b] = flipped;
+                    if (a.dataset.id === b.dataset.id) {
+                        matched++;
+                        matchSpan.textContent = matched;
+                        a.classList.add('matched');
+                        b.classList.add('matched');
+                        gsap.to([a, b], {
+                            scale: 1.1,
+                            duration: 0.3,
+                            yoyo: true,
+                            repeat: 1,
+                            onComplete: () => {
+                                flipped = [];
+                                canFlip = true;
+                                if (matched === unboxChars.length) {
+                                    setTimeout(() => {
+                                        alert('🎉 恭喜！獲得限定壁紙！');
+                                    }, 500);
+                                }
+                            }
+                        });
+                    } else {
+                        setTimeout(() => {
+                            a.classList.remove('flipped');
+                            b.classList.remove('flipped');
+                            flipped = [];
+                            canFlip = true;
+                        }, 1000);
+                    }
+                }
+            }
+
+            initMemoryGame();
+            restartBtn.addEventListener('click', initMemoryGame);
+
+            // ==================== 初始化互動樂園 ====================
+            renderChars();
+            renderFoods();
+            updateStats();
+            if (interactiveCharacters.find(c => c.unlocked)) {
+                selectChar(interactiveCharacters.find(c => c.unlocked));
+            } else {
+                // 無解鎖角色時，顯示預設問號
+                curImg.style.display = 'none';
+                curFallback.style.display = 'flex';
+                curFallback.innerHTML = '<i class="fas fa-question"></i>';
+            }
+
+            // ==================== 導覽列響應 ====================
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+
+            document.querySelectorAll('.nav-links a, .cta-button[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') return;
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // ==================== 英雄視覺動畫 ====================
+            const hero = document.getElementById('heroVisual');
+            hero.innerHTML = `<div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;"><div style="width:300px;height:300px;border-radius:50%;background:radial-gradient(circle, var(--accent) 0%, transparent 70%);position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:5rem;color:white;text-shadow:0 0 20px var(--accent);"><i class="fas fa-utensils"></i></div></div></div>`;
+            gsap.to(hero.querySelector('div > div'), { rotation: 360, duration: 20, repeat: -1, ease: 'none' });
+
+            // 導覽列滾動效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 100) {
+                    navbar.style.boxShadow = '0 5px 15px rgba(93, 83, 74, 0.15)';
+                    navbar.style.backgroundColor = 'rgba(255, 252, 237, 0.98)';
+                } else {
+                    navbar.style.boxShadow = '0 5px 15px rgba(93, 83, 74, 0.1)';
+                    navbar.style.backgroundColor = 'rgba(255, 252, 237, 0.95)';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
