@@ -874,81 +874,77 @@
         }
         
         /* ========== 記憶遊戲 ========== */
-        .game-section {
-            background-color: white;
-            border-radius: 20px;
-            padding: 3rem;
-            margin-top: 2rem;
-            border: 2px solid var(--secondary);
-            box-shadow: 0 10px 30px rgba(255, 232, 150, 0.1);
-        }
-        
-        .memory-game {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            max-width: 800px;
-            margin: 2rem auto;
-        }
-        
-        .memory-card {
-            aspect-ratio: 1;
-            background-color: var(--accent);
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5rem;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
-            position: relative;
-        }
-        
-        .memory-card.flipped {
-            transform: rotateY(180deg);
-        }
-        
-        .memory-card.matched {
-            cursor: default;
-            opacity: 0.7;
-            transform: rotateY(180deg);
-        }
-        
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-        
-        .card-front {
-            background-color: var(--secondary);
-            color: var(--dark);
-            transform: rotateY(180deg);
-        }
-        
-        .card-back {
-            background: linear-gradient(135deg, var(--accent), #5a9bc8);
-            color: white;
-        }
-        
-        .card-icon {
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-        
-        .card-name {
-            font-size: 0.8rem;
-            text-align: center;
-            margin-top: 5px;
-        }
+        /* ========== 記憶遊戲（卡片尺寸 54:90） ========== */
+.memory-game {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  /* 每行4張卡片 */
+    gap: 1rem;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.memory-card {
+    aspect-ratio: 54 / 90;                  /* 寬54 : 高90 的長方形 */
+    background-color: var(--accent);
+    border-radius: 10px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    position: relative;
+}
+
+.memory-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched {
+    cursor: default;
+    opacity: 0.7;
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.card-front {
+    background-color: var(--secondary);
+    color: var(--dark);
+    transform: rotateY(180deg);
+    padding: 0;                     /* 移除內邊距，讓圖片完全填滿 */
+}
+
+.card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;              /* 圖片填滿容器，可能裁剪部分 */
+    display: block;
+}
+
+.card-front .card-name {
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 5px;
+    line-height: 1.2;
+    max-height: 20%;
+    overflow: hidden;
+}
+
+.card-back {
+    background: linear-gradient(135deg, var(--accent), #5a9bc8);
+    color: white;
+    font-size: 2rem;
+}
         
         /* ========== 產品卡片 ========== */
         .characters-grid {
@@ -1314,7 +1310,7 @@
     <!-- 記憶遊戲 -->
     <section id="games" class="container">
         <h2 class="page-title">葡食記憶挑戰</h2>
-        <p class="section-subtitle">挑戰你的記憶力！翻開卡片配對相同的葡式美食角色，全部配對成功即可獲得限定壁紙</p>
+        <p class="section-subtitle">挑戰你的記憶力！翻開卡片配對相同的葡式美食角色，全部配對成功即可獲得限定書纖</p>
         <div class="game-section">
             <div class="memory-game" id="memoryGame"></div>
             <div style="text-align: center; margin-top: 2rem;">
@@ -1416,40 +1412,45 @@
                     id: 1, 
                     name: "葡國雞小姐", 
                     rarity: "普通", 
-                    desc: "穿著華麗葡萄牙傳統服飾的優雅小姐，頭戴雞冠造型頭飾。性格溫和親切，擅長烹飪各種葡式美食，夢想是將葡國雞的美味傳遍世界。",
+                    desc: "穿著鈷藍色和亮黃色葡萄牙傳統服飾的的優雅小姐，頭戴一條柔美的頭巾。性格溫和親切，擅長烹飪各種葡式美食，夢想是將葡國雞的美味傳遍世界。",
                     img: imageBasePath ? imageBasePath + encodeURIComponent("葡國雞小姐") + ".png" : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500",
+                    cardImg: imageBasePath ? imageBasePath + encodeURIComponent("葡國雞小姐") + "_card.png" : "https://images.unsplash.com/...",  // 卡片專用圖片
                     icon: "fas fa-drumstick-bite"
                 },
                 { 
                     id: 2, 
                     name: "木糠布甸少女", 
                     rarity: "普通", 
-                    desc: "身穿淡粉色蓬蓬裙的可愛少女，髮飾是餅乾碎造型。個性甜美溫柔，喜歡製作各種甜品，特別是經典的木糠布甸。總是隨身帶著小勺子，隨時準備品嚐美味。",
+                    desc: "穿著咖啡色和香草白色層疊交錯的優雅蕾絲連身裙的可愛少女，頭頂點綴著細碎的餅乾碎薄紗，個性甜美溫柔，宛如甜點本身，喜歡唱歌和跳舞。",
                     img: imageBasePath ? imageBasePath + encodeURIComponent("木糠布甸少女") + ".png" : "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=500",
+                    cardImg: imageBasePath ? imageBasePath + encodeURIComponent("木糠布甸少女") + "_card.png" : "https://images.unsplash.com/...",  // 卡片專用圖片
                     icon: "fas fa-ice-cream"
                 },
                 { 
                     id: 3, 
                     name: "免治土豆崽", 
                     rarity: "普通", 
-                    desc: "活潑好動的小男孩，穿著廚師圍裙，頭頂土豆造型帽子。喜歡在廚房裡幫忙，特別擅長切土豆。夢想是成為最厲害的廚師，創造出更多美味的免治土豆菜式。",
+                    desc: "穿著質樸的苔綠色格子背帶褲和土紅色、芥末黃的格子襯衫的小男孩，戴著報童帽。臉上總是掛著憨厚的笑容，特別擅長種菜。夢想是成為最厲害的廚師，創造出更多美味的免治土豆菜式。",
                     img: imageBasePath ? imageBasePath + encodeURIComponent("免治土豆崽") + ".png" : "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+                    cardImg: imageBasePath ? imageBasePath + encodeURIComponent("免治土豆崽") + "_card.png" : "https://images.unsplash.com/...",  // 卡片專用圖片
                     icon: "fas fa-carrot"
                 },
                 { 
                     id: 4, 
                     name: "非洲雞叔叔", 
                     rarity: "普通", 
-                    desc: "充滿活力的中年大叔，穿著非洲風味圍裙，頭戴辣椒造型帽。精通各種香料搭配，特別擅長製作香辣惹味的非洲雞。性格熱情豪爽，喜歡與人分享美食。",
+                    desc: "十分有紳士風範的中年大叔，穿著黑色並點綴著紅色的葡萄牙傳統服飾，頭戴紅色雞冠造型帽。性格沉隱大方，喜歡與人分享美食。",
                     img: imageBasePath ? imageBasePath + encodeURIComponent("非洲雞叔叔") + ".png" : "https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?w=500",
+                    cardImg: imageBasePath ? imageBasePath + encodeURIComponent("非洲雞叔叔") + "_card.png" : "https://images.unsplash.com/...",  // 卡片專用圖片
                     icon: "fas fa-pepper-hot"
                 },
                 { 
                     id: 5, 
                     name: "馬介休球小子", 
                     rarity: "稀有", 
-                    desc: "葡萄牙飲食文化的代表，穿著水手服的可愛男孩，頭頂鱈魚造型帽子。是系列中的稀有角色，擁有操控海水的能力。性格沉穩睿智，對葡式美食的歷史瞭如指掌。",
+                    desc: "葡萄牙飲食文化的代表，穿著一套金棕色並點綴著橄欖綠葡萄牙水手服的可愛男孩，頭戴一頂金色貝雷帽。他活潑動感，彷彿海裏的魚兒。是系列中的稀有角色。",
                     img: imageBasePath ? imageBasePath + encodeURIComponent("馬介休小子") + ".png" : "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500",
+                    cardImg: imageBasePath ? imageBasePath + encodeURIComponent("馬介休小子") + "_card.png" : "https://images.unsplash.com/...",  // 卡片專用圖片
                     icon: "fas fa-fish"
                 }
             ];
@@ -1873,30 +1874,36 @@
                 return a;
             }
 
-            function initMemoryGame() {
-                memoryGame.innerHTML = '';
-                flipped = [];
-                matched = 0;
-                canFlip = true;
-                matchSpan.textContent = matched;
-                const base = unboxChars.map(c => ({ id: c.id, icon: c.icon, name: c.name }));
-                cards = shuffleArray([...base, ...base]);
-                cards.forEach((c, i) => {
-                    const card = document.createElement('div');
-                    card.className = 'memory-card';
-                    card.dataset.id = c.id;
-                    card.dataset.index = i;
-                    card.innerHTML = `
-                        <div class="card-front">
-                            <div class="card-icon"><i class="${c.icon}"></i></div>
-                            <div class="card-name">${c.name}</div>
-                        </div>
-                        <div class="card-back"><i class="fas fa-utensils"></i></div>
-                    `;
-                    card.addEventListener('click', () => flipCard(card));
-                    memoryGame.appendChild(card);
-                });
-            }
+    function initMemoryGame() {
+    memoryGame.innerHTML = '';
+    flipped = [];
+    matched = 0;
+    canFlip = true;
+    matchSpan.textContent = matched;
+    const base = unboxChars.map(c => ({ 
+        id: c.id, 
+        cardImg: c.cardImg,          // 使用卡片圖片
+        name: c.name                 // 雖然保留但不在正面顯示
+    }));
+    cards = shuffleArray([...base, ...base]);
+    cards.forEach((c, i) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.id = c.id;
+        card.dataset.index = i;
+        card.innerHTML = `
+            <div class="card-front">
+                <img src="${c.cardImg}" alt="${c.name}" 
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/100x150?text=${encodeURIComponent(c.name)}';">
+            </div>
+            <div class="card-back">
+                <i class="fas fa-utensils"></i>
+            </div>
+        `;
+        card.addEventListener('click', () => flipCard(card));
+        memoryGame.appendChild(card);
+    });
+}
 
             function flipCard(card) {
                 if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length >= 2) return;
@@ -1920,7 +1927,7 @@
                                 canFlip = true;
                                 if (matched === unboxChars.length) {
                                     setTimeout(() => {
-                                        alert('🎉 恭喜！獲得限定壁紙！');
+                                        alert('🎉 恭喜！獲得限定書纖！');
                                     }, 500);
                                 }
                             }
