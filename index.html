@@ -8,6 +8,89 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
         /* ========== 全域變數 ========== */
+        .food-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+/* 模態框內容 */
+.food-modal-content {
+    background-color: var(--primary);
+    margin: auto;
+    padding: 2rem;
+    border: 3px solid var(--accent);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 關閉按鈕 */
+.food-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--dark);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.food-modal-close:hover {
+    color: var(--accent);
+}
+
+/* 模態框內圖片 */
+.food-modal-img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    border: 2px solid var(--secondary);
+}
+
+/* 模態框標題 */
+.food-modal-title {
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+/* 模態框描述 */
+.food-modal-desc {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .food-modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+    .food-modal-title {
+        font-size: 1.5rem;
+    }
+}
         :root {
             --primary: #FFFCED;
             --secondary: #FFE896;
@@ -1350,7 +1433,15 @@
                 </div>
             </div>
         </div>
-        <div class="copyright">© 2023 MO POP 葡韻美食互動樂園. 保留所有權利。</div>
+        <div class="copyright">© 2026 MO POP 葡韻美食互動樂園. 保留所有權利。</div>
+        <div id="foodModal" class="food-modal">
+    <div class="food-modal-content">
+        <span class="food-modal-close">&times;</span>
+        <div id="foodModalBody">
+            <!-- 動態內容將由 JavaScript 填充 -->
+        </div>
+    </div>
+</div>
     </footer>
 
     <script>
@@ -1378,7 +1469,7 @@
                 { 
                     id: 2, 
                     name: "木糠布甸少女", 
-                    rarity: "普通", 
+                    rarity: "普通",
                     desc: "穿著咖啡色和香草白色層疊交錯的優雅蕾絲連身裙的可愛少女，頭頂點綴著細碎的餅乾碎薄紗，個性甜美溫柔，宛如甜點本身，喜歡唱歌和跳舞。",
                     img: imageBasePath ? imageBasePath + encodeURIComponent("木糠布甸少女") + ".png" : "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=500",
                     cardImg: imageBasePath ? imageBasePath + encodeURIComponent("木糠布甸少女") + "_card.png" : "https://images.unsplash.com/...",  // 卡片專用圖片
@@ -1570,7 +1661,81 @@
             const memoryGame = document.getElementById('memoryGame');
             const restartBtn = document.getElementById('restartGame');
             const matchSpan = document.getElementById('matchCount');
+// 葡式美食詳細資料（可依需求修改內容與圖片）
+const foodDetails = {
+    "葡國雞": {
+        title: "葡國雞",
+        img: imageBasePath ? imageBasePath + encodeURIComponent("葡國雞") + ".png" : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500",
+        fullDesc: "葡國雞是澳門最具代表性的葡式菜餚之一，融合了葡萄牙、印度和澳門當地的烹飪風格。主要食材包括雞肉、馬鈴薯、洋蔥、雞蛋、椰奶、黃薑粉、橄欖油等。烹調時會加入葡萄酒和香料，味道香濃醇厚，帶有淡淡的椰香，是澳門土生葡人的家常菜。"
+    },
+    "木糠布甸": {
+        title: "木糠布甸",
+        img: imageBasePath ? imageBasePath + encodeURIComponent("木糠布甸") + ".png" : "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=500",
+        fullDesc: "木糠布甸（Serradura）是葡萄牙著名的冷藏甜品，在澳門也非常受歡迎。由馬利餅乾碎和鮮奶油層層疊起，冷凍後食用，口感像冰淇淋一樣綿密細滑。因為餅乾碎像木屑而得名「木糠」，是澳門各大餐廳和家庭常見的飯後甜點。"
+    },
+    "免治土豆": {
+        title: "免治土豆",
+        img: imageBasePath ? imageBasePath + encodeURIComponent("免治土豆") + ".png" : "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+        fullDesc: "免治土豆（Minchi）是澳門土生葡人的經典菜式，靈感源自葡萄牙的「picado」。將碎肉（牛肉或豬肉）與馬鈴薯丁、洋蔥、醬油、香料一同炒製，通常會配上一顆太陽蛋和白飯。味道鹹香濃郁，是澳門茶餐廳的常見美食，象徵著中葡飲食文化的融合。"
+    },
+    "非洲雞": {
+        title: "非洲雞",
+        img: imageBasePath ? imageBasePath + encodeURIComponent("非洲雞") + ".png" : "https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?w=500",
+        fullDesc: "非洲雞（Galinha à Africana）是澳門獨創的菜餚，雖然名字有「非洲」，但其實是葡萄牙人經非洲莫桑比克、安哥拉等地航海時帶入澳門的改良料理。使用花生、椰奶、辣椒、大蒜、洋蔥等多種香料調製醬汁，烤製後香辣惹味，風味獨特，是澳門必試的 fusion 菜。"
+    },
+    "馬介休": {
+        title: "馬介休球",
+        img: imageBasePath ? imageBasePath + encodeURIComponent("馬介休球") + ".png" : "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500",
+        fullDesc: "馬介休（Bacalhau）是葡萄牙國寶級的食材，即鹽醃鱈魚。在澳門最常見的吃法是炸成馬介休球，將鹹鱈魚肉、馬鈴薯泥、香菜、雞蛋混合後油炸，外酥內軟，鹹香可口。馬介休還可以做成炒飯、燉菜等多種料理，是澳門葡式餐廳的招牌菜之一。"
+    }
+};
 
+// 獲取模態框元素
+const modal = document.getElementById('foodModal');
+const modalBody = document.getElementById('foodModalBody');
+const closeBtn = document.querySelector('.food-modal-close');
+
+// 為每個美食特色框添加點擊事件
+document.querySelectorAll('.food-feature').forEach(feature => {
+    const titleElement = feature.querySelector('.food-feature-title');
+    if (!titleElement) return;
+    const foodName = titleElement.innerText;
+    // 讓滑鼠游標變為手指
+    feature.style.cursor = 'pointer';
+    feature.addEventListener('click', () => {
+        // 尋找詳細資料（若標題有「馬介休」，則對應 key 為「馬介休球」）
+        let detail = foodDetails[foodName];
+        if (!detail && foodName === "馬介休") {
+            detail = foodDetails["馬介休球"];
+        }
+        if (detail) {
+            modalBody.innerHTML = `
+                <img src="${detail.img}" alt="${detail.title}" class="food-modal-img" 
+                     onerror="this.src='https://via.placeholder.com/500x200?text=${encodeURIComponent(detail.title)}'">
+                <h3 class="food-modal-title">${detail.title}</h3>
+                <p class="food-modal-desc">${detail.fullDesc}</p>
+            `;
+            modal.style.display = 'flex';
+        } else {
+            modalBody.innerHTML = `<p>暫無詳細介紹。</p>`;
+            modal.style.display = 'flex';
+        }
+    });
+});
+
+// 點擊關閉按鈕關閉模態框
+if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+}
+
+// 點擊模態框背景關閉
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
             // ==================== 初始化 Logo ====================
             function initLogo() {
                 if (imageBasePath) {
